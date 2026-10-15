@@ -8,13 +8,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Canvas Confetti CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Google Fonts pour une typographie douce et enfantine -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
             background: linear-gradient(135deg, #fff5f7 0%, #f0f4ff 50%, #fdf2f8 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
         h1, h2, .font-fredoka {
             font-family: 'Fredoka', cursive;
@@ -26,19 +27,49 @@
             font-family: 'Fredoka', cursive;
             background: linear-gradient(135deg, #ff72a1, #ff4785);
         }
-        /* Effets de transition doux */
         .task-card {
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .task-card:hover {
             transform: translateY(-4px);
         }
-        /* Style des boutons 👍 et 👎 */
         .btn-thumb {
             transition: all 0.2s ease;
         }
         .btn-thumb:active {
             transform: scale(0.88);
+        }
+
+        /* Animation des ballons pour le score 8 */
+        .balloon {
+            position: fixed;
+            bottom: -100px;
+            width: 50px;
+            height: 70px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            animation: floatUp 5s linear forwards;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 15px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) rotate(20deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -59,7 +90,6 @@
         </div>
 
         <!-- IMAGE EN HAUT DE PAGE -->
-        <!-- Note GitHub Pages : Déposez l'image dans le même dossier sous le nom "image.jpg" ou "routine.jpg" -->
         <div class="bg-white rounded-3xl p-3 sm:p-4 card-shadow mb-8 border-4 border-pink-200 overflow-hidden relative group">
             <div class="relative overflow-hidden rounded-2xl">
                 <img 
@@ -75,34 +105,49 @@
         </div>
     </header>
 
-    <!-- Section Compteur de Score & Récompense -->
+    <!-- Section principale : Grille des 11 Tâches de Nina -->
     <main class="max-w-4xl mx-auto px-4">
-        <section class="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-white rounded-3xl p-6 mb-8 text-center card-shadow relative overflow-hidden">
+        <div class="mb-6 flex justify-between items-center">
+            <h2 class="text-2xl font-bold text-gray-700 font-fredoka">Mes gestes du jour 👇</h2>
+            <button onclick="resetDay()" class="bg-pink-100 hover:bg-pink-200 text-pink-700 text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-xl transition duration-200 flex items-center gap-1 border border-pink-200">
+                🔄 Réinitialiser la journée
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12" id="tasksGrid">
+            <!-- Injecté dynamiquement par JS -->
+        </div>
+
+        <!-- SECTION DU SCORE TOUT EN BAS DE PAGE -->
+        <section id="scoreSection" class="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-white rounded-3xl p-6 sm:p-8 text-center card-shadow relative overflow-hidden">
             <div class="relative z-10">
-                <h2 class="text-2xl sm:text-3xl font-bold mb-2">Mon score du soir 🌙</h2>
-                <div class="inline-flex items-center justify-center bg-white/20 backdrop-blur-md px-6 py-2 rounded-full mb-3 border border-white/30">
-                    <span id="scoreText" class="text-3xl sm:text-4xl font-extrabold tracking-wider">0 / 11 🌟</span>
+                <div class="flex items-center justify-center gap-2 mb-2">
+                    <span class="text-2xl">🌙</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold">Mon score du soir</h2>
+                    <span class="text-2xl">⭐</span>
                 </div>
                 
-                <div id="statusMessage" class="text-base sm:text-lg font-medium transition-all duration-300 min-h-[3rem] flex items-center justify-center">
-                    Coche tes victoires de la journée avant d'aller dormir ! 👇
+                <div class="inline-flex items-center justify-center bg-white/20 backdrop-blur-md px-8 py-3 rounded-full my-3 border border-white/30 shadow-inner">
+                    <span id="scoreText" class="text-4xl sm:text-5xl font-extrabold tracking-wider">0 / 11 🌟</span>
+                </div>
+                
+                <!-- Zone de message et récompenses -->
+                <div id="statusMessage" class="text-lg sm:text-xl font-bold transition-all duration-300 min-h-[3.5rem] flex items-center justify-center bg-black/10 rounded-2xl p-4 my-3 border border-white/20">
+                    Mets tes 👍 et 👎 ci-dessus avant de te coucher !
                 </div>
 
-                <div class="mt-4 flex justify-center gap-3">
-                    <button onclick="resetDay()" class="bg-white/20 hover:bg-white/30 text-white text-sm font-semibold px-4 py-2 rounded-xl transition duration-200 flex items-center gap-2 border border-white/40">
-                        🔄 Recommencer une journée
-                    </button>
-                    <button onclick="triggerConfetti()" class="bg-yellow-400 hover:bg-yellow-300 text-gray-900 text-sm font-bold px-4 py-2 rounded-xl transition duration-200 shadow-md flex items-center gap-2">
-                        🎉 Feux d'artifice !
+                <!-- Indication visuelle de la célébration active -->
+                <div id="rewardBadge" class="hidden inline-block px-4 py-1.5 bg-yellow-300 text-yellow-900 rounded-full font-bold text-sm shadow-md animate-bounce mb-3">
+                    ✨ Célébration débloquée !
+                </div>
+
+                <div class="mt-2 flex flex-wrap justify-center gap-3">
+                    <button id="relaunchBtn" onclick="playCurrentCelebration()" class="hidden bg-yellow-400 hover:bg-yellow-300 text-gray-900 text-sm font-bold px-5 py-2.5 rounded-xl transition duration-200 shadow-md items-center gap-2">
+                        🎉 Rejouer la fête !
                     </button>
                 </div>
             </div>
         </section>
-
-        <!-- Grille des 11 Tâches de Nina -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="tasksGrid">
-            <!-- Injecté dynamiquement par JavaScript -->
-        </div>
     </main>
 
     <!-- Pied de page -->
@@ -112,23 +157,24 @@
 
     <!-- Logique JavaScript -->
     <script>
-        // Liste exacte des 11 tâches issues de l'image
+        // Liste exacte des 11 tâches
         const tasks = [
-            { id: 1, title: "Se laver les mains", icon: "🧼", color: "from-pink-100 to-rose-100", border: "border-pink-200" },
-            { id: 2, title: "Se brosser les dents", icon: "🪥", color: "from-sky-100 to-blue-100", border: "border-sky-200" },
-            { id: 3, title: "Prendre un bain", icon: "🛁", color: "from-teal-100 to-emerald-100", border: "border-teal-200" },
-            { id: 4, title: "Aller aux toilettes", icon: "🚽", color: "from-purple-100 to-indigo-100", border: "border-purple-200" },
-            { id: 5, title: "Manger", icon: "🥗", color: "from-amber-100 to-yellow-100", border: "border-amber-200" },
-            { id: 6, title: "Ranger", icon: "🧸", color: "from-emerald-100 to-green-100", border: "border-emerald-200" },
-            { id: 7, title: "Se coiffer", icon: "💇‍♀️", color: "from-rose-100 to-pink-100", border: "border-rose-200" },
-            { id: 8, title: "S'habiller", icon: "👕", color: "from-blue-100 to-cyan-100", border: "border-blue-200" },
-            { id: 9, title: "Le soir : mettre son pyjama", icon: "🌙", color: "from-indigo-100 to-purple-100", border: "border-indigo-200" },
-            { id: 10, title: "Se préparer pour l'école", icon: "🎒", color: "from-teal-100 to-cyan-100", border: "border-teal-200" },
-            { id: 11, title: "Aller à l'école", icon: "🏫", color: "from-purple-100 to-pink-100", border: "border-purple-200" }
+            { id: 1, title: "Se laver les mains", icon: "🧼" },
+            { id: 2, title: "Se brosser les dents", icon: "🪥" },
+            { id: 3, title: "Prendre un bain", icon: "🛁" },
+            { id: 4, title: "Aller aux toilettes", icon: "🚽" },
+            { id: 5, title: "Manger", icon: "🥗" },
+            { id: 6, title: "Ranger", icon: "🧸" },
+            { id: 7, title: "Se coiffer", icon: "💇‍♀️" },
+            { id: 8, title: "S'habiller", icon: "👕" },
+            { id: 9, title: "Le soir : mettre son pyjama", icon: "🌙" },
+            { id: 10, title: "Se préparer pour l'école", icon: "🎒" },
+            { id: 11, title: "Aller à l'école", icon: "🏫" }
         ];
 
-        // État des tâches (enregistré dans le localStorage)
+        // État de l'utilisateur
         let userState = JSON.parse(localStorage.getItem('nina_routine_state')) || {};
+        let lastCelebratedScore = null;
 
         // Génération des cartes HTML
         function renderTasks() {
@@ -136,8 +182,7 @@
             grid.innerHTML = '';
 
             tasks.forEach(task => {
-                const status = userState[task.id]; // 'up', 'down', ou undefined
-
+                const status = userState[task.id];
                 const isUp = status === 'up';
                 const isDown = status === 'down';
 
@@ -147,8 +192,6 @@
 
                 const cardHtml = `
                     <div class="task-card ${bgCard} rounded-2xl p-4 flex flex-col justify-between card-shadow border border-pink-100 relative overflow-hidden">
-                        
-                        <!-- Numéro de badge -->
                         <div class="flex items-center justify-between mb-3">
                             <span class="badge-number text-white font-bold w-8 h-8 rounded-full flex items-center justify-center text-sm shadow">
                                 ${task.id}
@@ -156,12 +199,10 @@
                             <span class="text-2xl">${task.icon}</span>
                         </div>
 
-                        <!-- Titre de la tâche -->
                         <h3 class="font-fredoka text-lg text-gray-800 font-semibold mb-4 leading-snug">
                             ${task.title}
                         </h3>
 
-                        <!-- Boutons Thumbs Up / Thumbs Down -->
                         <div class="flex gap-2 mt-auto pt-2 border-t border-gray-100">
                             <button 
                                 onclick="setTaskStatus(${task.id}, 'up')" 
@@ -171,7 +212,7 @@
                                         : 'bg-gray-100 hover:bg-emerald-100 text-emerald-700'
                                 }"
                             >
-                                <span class="text-xl">👍</span> Bravo !
+                                <span class="text-xl">👍</span> Oui !
                             </button>
 
                             <button 
@@ -182,7 +223,7 @@
                                         : 'bg-gray-100 hover:bg-rose-100 text-rose-600'
                                 }"
                             >
-                                <span class="text-xl">👎</span> Demain !
+                                <span class="text-xl">👎</span> Non
                             </button>
                         </div>
                     </div>
@@ -193,56 +234,218 @@
             updateScore();
         }
 
-        // Mettre à jour le statut d'une tâche
         function setTaskStatus(taskId, status) {
-            // Si l'utilisateur clique sur le même bouton, on annule le choix
             if (userState[taskId] === status) {
                 delete userState[taskId];
             } else {
                 userState[taskId] = status;
             }
-
-            // Sauvegarde dans le navigateur
             localStorage.setItem('nina_routine_state', JSON.stringify(userState));
-            
             renderTasks();
         }
 
-        // Variable pour éviter les déclenchements multiples de confettis
-        let confettiTriggered = false;
-
-        // Mettre à jour le calcul du score et vérifier la victoire (Score >= 6)
+        // Mise à jour du score et déclenchement des fêtes
         function updateScore() {
             const score = Object.values(userState).filter(status => status === 'up').length;
-            const scoreText = document.getElementById('scoreText');
-            const statusMessage = document.getElementById('statusMessage');
+            document.getElementById('scoreText').textContent = `${score} / 11 🌟`;
 
-            scoreText.textContent = `${score} / 11 🌟`;
+            const statusMessage = document.getElementById('statusMessage');
+            const rewardBadge = document.getElementById('rewardBadge');
+            const relaunchBtn = document.getElementById('relaunchBtn');
 
             if (score >= 6) {
-                statusMessage.innerHTML = `<span class="text-yellow-200 font-extrabold text-xl sm:text-2xl animate-bounce">🎉 BRAVO NINA ! Tu as réussi ta journée ! 🏆</span>`;
-                
-                // Déclencher le feu d'artifice/confettis la première fois qu'on passe le seuil de 6
-                if (!confettiTriggered) {
-                    triggerConfetti();
-                    confettiTriggered = true;
+                rewardBadge.classList.remove('hidden');
+                relaunchBtn.classList.remove('hidden');
+                relaunchBtn.classList.add('flex');
+
+                // Si le score a changé, on déclenche automatiquement la fête
+                if (lastCelebratedScore !== score) {
+                    lastCelebratedScore = score;
+                    playCelebrationForScore(score);
                 }
             } else {
-                confettiTriggered = false; // Réinitialiser le flag si le score passe sous 6
+                rewardBadge.classList.add('hidden');
+                relaunchBtn.classList.add('hidden');
+                relaunchBtn.classList.remove('flex');
+                lastCelebratedScore = null;
+
                 if (score > 0) {
-                    statusMessage.textContent = `Encore quelques petites victoires pour fêter ça ! 💪 (${6 - score} de plus pour les confettis !)`;
+                    statusMessage.innerHTML = `Encore un effort Nina ! 💪 (${6 - score} de plus pour débloquer la fête !)`;
                 } else {
-                    statusMessage.textContent = "Coche tes victoires de la journée avant d'aller dormir ! 👇";
+                    statusMessage.innerHTML = `Mets tes 👍 et 👎 ci-dessus avant de te coucher !`;
                 }
             }
         }
 
-        // Animation de Confettis & Feux d'artifice avec Canvas Confetti
-        function triggerConfetti() {
-            var count = 200;
-            var defaults = {
-                origin: { y: 0.7 }
-            };
+        function playCurrentCelebration() {
+            const score = Object.values(userState).filter(status => status === 'up').length;
+            if (score >= 6) {
+                playCelebrationForScore(score);
+            }
+        }
+
+        // Gérer les différentes célébrations par score (6 à 11)
+        function playCelebrationForScore(score) {
+            const statusMessage = document.getElementById('statusMessage');
+
+            switch (score) {
+                case 6:
+                    statusMessage.innerHTML = `🎆 <strong>SCORE 6 : Feux d'artifice !</strong><br>Bravo Nina ! Tu as réussi ta journée !`;
+                    triggerFireworks();
+                    break;
+                case 7:
+                    statusMessage.innerHTML = `🗣️ <strong>SCORE 7 : Bravo Nina, c'est super !</strong>`;
+                    speakText("Bravo Nina, c'est super !");
+                    triggerLightConfetti();
+                    break;
+                case 8:
+                    statusMessage.innerHTML = `🎈 <strong>SCORE 8 : Envolée de ballons !</strong><br>Regarde tous ces ballons pour toi !`;
+                    triggerBalloons();
+                    break;
+                case 9:
+                    statusMessage.innerHTML = `🎵 <strong>SCORE 9 : Musique de fête !</strong><br>Danse Nina, c'est ta musique !`;
+                    playPartyMusic();
+                    triggerLightConfetti();
+                    break;
+                case 10:
+                    statusMessage.innerHTML = `🌟 <strong>SCORE 10 : Incroyable !</strong>`;
+                    speakText("Fantastique Nina, tu as presque la journée parfaite !");
+                    triggerFireworks();
+                    break;
+                case 11:
+                    statusMessage.innerHTML = `🏆 <strong>SCORE 11 : PARFAIT ! 🚨</strong><br>Journée Parfaite ! Tu es la championne !`;
+                    playSirenSound();
+                    triggerMegaConfetti();
+                    break;
+            }
+        }
+
+        // --- EFFET 6 : Feux d'artifice ---
+        function triggerFireworks() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // --- EFFETS 7 & 10 : Synthèse vocale ---
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Arreter les paroles en cours
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'fr-FR';
+                utterance.pitch = 1.3; // Voix un peu plus aigüe / enfantine
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // --- EFFET 8 : Ballons gonflables ---
+        function triggerBalloons() {
+            const colors = ['#ff4785', '#7c3aed', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'];
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.className = 'balloon';
+                    balloon.style.left = Math.random() * 90 + 'vw';
+                    balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    balloon.style.animationDuration = (Math.random() * 2 + 4) + 's';
+                    document.body.appendChild(balloon);
+
+                    setTimeout(() => balloon.remove(), 6000);
+                }, i * 150);
+            }
+        }
+
+        // --- EFFET 9 : Musique de fête (Web Audio API) ---
+        function playPartyMusic() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                
+                // Notes joyeuses (Jingle)
+                const notes = [
+                    { f: 523.25, d: 0.15 }, // Do
+                    { f: 659.25, d: 0.15 }, // Mi
+                    { f: 783.99, d: 0.15 }, // Sol
+                    { f: 1046.50, d: 0.3 }, // Do haut
+                    { f: 783.99, d: 0.15 }, // Sol
+                    { f: 1046.50, d: 0.5 }  // Do haut long
+                ];
+
+                let now = ctx.currentTime;
+                notes.forEach(note => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(note.f, now);
+                    
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + note.d);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + note.d);
+                    now += note.d + 0.05;
+                });
+            } catch (e) {
+                console.log("Web Audio API pas supporté ou bloqué");
+            }
+        }
+
+        // --- EFFET 11 : Sirène de fête (Web Audio API) ---
+        function playSirenSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sawtooth';
+                
+                // Effet de sirène montante/descendante
+                const now = ctx.currentTime;
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.linearRampToValueAtTime(900, now + 0.4);
+                osc.frequency.linearRampToValueAtTime(400, now + 0.8);
+                osc.frequency.linearRampToValueAtTime(1000, now + 1.2);
+
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 1.5);
+            } catch (e) {
+                console.log("Audio non supporté");
+            }
+        }
+
+        // Effet de confettis léger
+        function triggerLightConfetti() {
+            confetti({ particleCount: 80, spread: 70, origin: { y: 0.8 } });
+        }
+
+        // Effet Mega Confetti pour le 11/11
+        function triggerMegaConfetti() {
+            var count = 350;
+            var defaults = { origin: { y: 0.7 } };
 
             function fire(particleRatio, opts) {
                 confetti(Object.assign({}, defaults, opts, {
@@ -250,41 +453,22 @@
                 }));
             }
 
-            fire(0.25, {
-                spread: 26,
-                startVelocity: 55,
-            });
-            fire(0.2, {
-                spread: 60,
-            });
-            fire(0.35, {
-                spread: 100,
-                decay: 0.91,
-                scalar: 0.8
-            });
-            fire(0.1, {
-                spread: 120,
-                startVelocity: 25,
-                decay: 0.92,
-                scalar: 1.2
-            });
-            fire(0.1, {
-                spread: 120,
-                startVelocity: 45,
-            });
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.4 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
         }
 
-        // Réinitialiser la journée
         function resetDay() {
             if (confirm("Veux-tu réinitialiser les choix pour commencer une nouvelle journée ? ☀️")) {
                 userState = {};
                 localStorage.removeItem('nina_routine_state');
-                confettiTriggered = false;
+                lastCelebratedScore = null;
                 renderTasks();
             }
         }
 
-        // Initialisation de la page
         window.onload = function() {
             renderTasks();
         };
