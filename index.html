@@ -1,477 +1,397 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu es capable, Nina ! 💕 - Le tableau des victoires de Nina</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Canvas Confetti CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #fff5f7 0%, #f0f4ff 50%, #fdf2f8 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        h1, h2, .font-fredoka {
-            font-family: 'Fredoka', cursive;
-        }
-        .card-shadow {
-            box-shadow: 0 10px 25px -5px rgba(255, 182, 193, 0.4), 0 8px 10px -6px rgba(186, 230, 253, 0.3);
-        }
-        .badge-number {
-            font-family: 'Fredoka', cursive;
-            background: linear-gradient(135deg, #ff72a1, #ff4785);
-        }
-        .task-card {
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .task-card:hover {
-            transform: translateY(-4px);
-        }
-        .btn-thumb {
-            transition: all 0.2s ease;
-        }
-        .btn-thumb:active {
-            transform: scale(0.88);
-        }
-
-        /* Animation des ballons pour le score 8 */
-        .balloon {
-            position: fixed;
-            bottom: -100px;
-            width: 50px;
-            height: 70px;
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-            animation: floatUp 5s linear forwards;
-            z-index: 9999;
-            pointer-events: none;
-        }
-        .balloon::after {
-            content: "";
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 15px;
-            background: rgba(0, 0, 0, 0.3);
-        }
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-120vh) rotate(20deg);
-                opacity: 0;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Tableau de Routine Nina 🌸</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #ffd1dc 0%, #e0c3fc 50%, #8ec5fc 100%);
+      min-height: 100vh;
+    }
+    h1, h2, h3, .font-fredoka {
+      font-family: 'Fredoka', cursive;
+    }
+    .card-shadow {
+      box-shadow: 0 10px 25px -5px rgba(255, 182, 193, 0.4), 0 8px 10px -6px rgba(186, 230, 253, 0.3);
+    }
+    .task-card {
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .task-card:hover {
+      transform: translateY(-4px);
+    }
+    .balloon {
+      position: fixed;
+      bottom: -100px;
+      width: 50px;
+      height: 70px;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      animation: floatUp 4.5s ease-in forwards;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .balloon::after {
+      content: "";
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 16px;
+      background: rgba(0, 0, 0, 0.25);
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-120vh) rotate(20deg); opacity: 0; }
+    }
+  </style>
 </head>
-<body class="text-gray-800 pb-16">
+<body class="text-gray-800 pb-12 px-4">
 
-    <!-- En-tête principal -->
-    <header class="max-w-4xl mx-auto px-4 pt-6 text-center">
-        <div class="bg-white/80 backdrop-blur-md rounded-3xl p-6 mb-6 card-shadow border-2 border-pink-100">
-            <span class="inline-block px-4 py-1.5 bg-pink-100 text-pink-600 font-semibold rounded-full text-sm mb-3">
-                ✨ Petits gestes au quotidien
-            </span>
-            <h1 class="text-3xl sm:text-5xl font-bold text-pink-500 mb-2 tracking-wide">
-                Tu es capable, Nina ! 💕
-            </h1>
-            <p class="text-purple-500 font-bold text-lg sm:text-xl">
-                Grande confiance en toi ✨
-            </p>
-        </div>
+  <div class="max-w-4xl mx-auto pt-6">
 
-        <!-- IMAGE EN HAUT DE PAGE -->
-        <div class="bg-white rounded-3xl p-3 sm:p-4 card-shadow mb-8 border-4 border-pink-200 overflow-hidden relative group">
-            <div class="relative overflow-hidden rounded-2xl">
-                <img 
-                    src="image.jpg" 
-                    alt="Tableau des routines de Nina" 
-                    class="w-full h-auto object-cover rounded-2xl shadow-inner transform transition duration-500 hover:scale-[1.01]"
-                    onerror="this.onerror=null; this.src='https://placehold.co/1000x1000/ffd1dc/8b0046?text=Ajoutez+votre+image+en+la+nommant+image.jpg'; "
-                >
-            </div>
-            <p class="text-xs text-gray-400 mt-2 italic">
-                📸 Nommez votre image <code class="bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded">image.jpg</code> dans le dossier GitHub pour remplacer l'image de démonstration.
-            </p>
-        </div>
+    <!-- En-tête -->
+    <header class="text-center mb-6 bg-white/90 backdrop-blur-md rounded-3xl p-6 border-4 border-pink-200 card-shadow">
+      <h1 class="text-3xl sm:text-5xl font-bold text-pink-500 mb-2">
+        Mon Tableau de Routine Nina 🌸
+      </h1>
+      <p class="text-purple-600 font-bold text-lg sm:text-xl">
+        Remplis tes réussites avant de te coucher ! 🌙
+      </p>
     </header>
 
-    <!-- Section principale : Grille des 11 Tâches de Nina -->
-    <main class="max-w-4xl mx-auto px-4">
-        <div class="mb-6 flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-700 font-fredoka">Mes gestes du jour 👇</h2>
-            <button onclick="resetDay()" class="bg-pink-100 hover:bg-pink-200 text-pink-700 text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-xl transition duration-200 flex items-center gap-1 border border-pink-200">
-                🔄 Réinitialiser la journée
-            </button>
-        </div>
+    <!-- Image en haut de page -->
+    <div class="bg-white rounded-3xl p-3 sm:p-4 card-shadow mb-8 border-4 border-pink-200 overflow-hidden">
+      <img 
+        src="image.jpg" 
+        alt="Routine quotidienne de Nina" 
+        class="w-full h-auto object-cover rounded-2xl shadow-inner"
+        onerror="this.onerror=null; this.src='https://placehold.co/1000x1000/ffd1dc/8b0046?text=Ajoutez+votre+image+en+la+nommant+image.jpg';"
+      >
+      <p class="text-xs text-gray-400 mt-2 text-center italic">
+        📸 Nommez votre image <code class="bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded">image.jpg</code> dans votre dossier GitHub.
+      </p>
+    </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12" id="tasksGrid">
-            <!-- Injecté dynamiquement par JS -->
-        </div>
+    <!-- Grille des 11 tâches -->
+    <main class="mb-12">
+      <h2 class="text-2xl font-bold text-purple-700 font-fredoka mb-4 text-center sm:text-left">
+        Les gestes de ma journée 👇
+      </h2>
 
-        <!-- SECTION DU SCORE TOUT EN BAS DE PAGE -->
-        <section id="scoreSection" class="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-white rounded-3xl p-6 sm:p-8 text-center card-shadow relative overflow-hidden">
-            <div class="relative z-10">
-                <div class="flex items-center justify-center gap-2 mb-2">
-                    <span class="text-2xl">🌙</span>
-                    <h2 class="text-2xl sm:text-3xl font-bold">Mon score du soir</h2>
-                    <span class="text-2xl">⭐</span>
-                </div>
-                
-                <div class="inline-flex items-center justify-center bg-white/20 backdrop-blur-md px-8 py-3 rounded-full my-3 border border-white/30 shadow-inner">
-                    <span id="scoreText" class="text-4xl sm:text-5xl font-extrabold tracking-wider">0 / 11 🌟</span>
-                </div>
-                
-                <!-- Zone de message et récompenses -->
-                <div id="statusMessage" class="text-lg sm:text-xl font-bold transition-all duration-300 min-h-[3.5rem] flex items-center justify-center bg-black/10 rounded-2xl p-4 my-3 border border-white/20">
-                    Mets tes 👍 et 👎 ci-dessus avant de te coucher !
-                </div>
-
-                <!-- Indication visuelle de la célébration active -->
-                <div id="rewardBadge" class="hidden inline-block px-4 py-1.5 bg-yellow-300 text-yellow-900 rounded-full font-bold text-sm shadow-md animate-bounce mb-3">
-                    ✨ Célébration débloquée !
-                </div>
-
-                <div class="mt-2 flex flex-wrap justify-center gap-3">
-                    <button id="relaunchBtn" onclick="playCurrentCelebration()" class="hidden bg-yellow-400 hover:bg-yellow-300 text-gray-900 text-sm font-bold px-5 py-2.5 rounded-xl transition duration-200 shadow-md items-center gap-2">
-                        🎉 Rejouer la fête !
-                    </button>
-                </div>
-            </div>
-        </section>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="tasksGrid">
+        <!-- Généré dynamiquement en JS -->
+      </div>
     </main>
 
+    <!-- SECTION DU SCORE TOUT EN BAS -->
+    <section id="scoreSection" class="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 text-white rounded-3xl p-6 sm:p-8 text-center card-shadow border-4 border-white">
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <span class="text-3xl">🌙</span>
+        <h2 class="text-2xl sm:text-3xl font-bold font-fredoka">Mon score du soir 🌙</h2>
+        <span class="text-3xl">⭐</span>
+      </div>
+
+      <div class="inline-flex items-center justify-center bg-white/20 backdrop-blur-md px-8 py-3 rounded-full my-3 border border-white/40 shadow-inner">
+        <span id="scoreDisplay" class="text-4xl sm:text-5xl font-extrabold tracking-wider font-fredoka">0 / 11 🌟</span>
+      </div>
+
+      <div id="celebrationMsg" class="text-lg sm:text-xl font-bold transition-all duration-300 min-h-[3.5rem] flex items-center justify-center bg-black/10 rounded-2xl p-4 my-3 border border-white/20">
+        Choisis 👍 ou 👎 pour chaque tâche avant d'aller dormir !
+      </div>
+
+      <div class="mt-4 flex flex-wrap justify-center gap-3">
+        <button 
+          onclick="resetDay()" 
+          class="bg-white hover:bg-pink-50 text-pink-600 font-bold px-6 py-3 rounded-2xl shadow-lg transition transform active:scale-95 flex items-center gap-2 text-lg font-fredoka"
+        >
+          🔄 Réinitialiser pour demain
+        </button>
+      </div>
+    </section>
+
     <!-- Pied de page -->
-    <footer class="mt-12 text-center text-pink-400 text-sm font-medium">
-        <p>Créé avec ❤️ pour Nina • Bravo pour tes efforts quotidiens ! 🏆</p>
+    <footer class="mt-8 text-center text-purple-700 font-medium text-sm">
+      <p>Créé avec ❤️ pour Nina • Bravo pour tes efforts quotidiens ! 🏆</p>
     </footer>
 
-    <!-- Logique JavaScript -->
-    <script>
-        // Liste exacte des 11 tâches
-        const tasks = [
-            { id: 1, title: "Se laver les mains", icon: "🧼" },
-            { id: 2, title: "Se brosser les dents", icon: "🪥" },
-            { id: 3, title: "Prendre un bain", icon: "🛁" },
-            { id: 4, title: "Aller aux toilettes", icon: "🚽" },
-            { id: 5, title: "Manger", icon: "🥗" },
-            { id: 6, title: "Ranger", icon: "🧸" },
-            { id: 7, title: "Se coiffer", icon: "💇‍♀️" },
-            { id: 8, title: "S'habiller", icon: "👕" },
-            { id: 9, title: "Le soir : mettre son pyjama", icon: "🌙" },
-            { id: 10, title: "Se préparer pour l'école", icon: "🎒" },
-            { id: 11, title: "Aller à l'école", icon: "🏫" }
+  </div>
+
+  <script>
+    const tasks = [
+      { id: 1, title: "Se laver les mains", icon: "🧼" },
+      { id: 2, title: "Se brosser les dents", icon: "🪥" },
+      { id: 3, title: "Prendre un bain", icon: "🛁" },
+      { id: 4, title: "Aller aux toilettes", icon: "🚽" },
+      { id: 5, title: "Manger", icon: "🥗" },
+      { id: 6, title: "Ranger", icon: "🧸" },
+      { id: 7, title: "Se coiffer", icon: "💇‍♀️" },
+      { id: 8, title: "S'habiller", icon: "👕" },
+      { id: 9, title: "Le soir : mettre son pyjama", icon: "🌙" },
+      { id: 10, title: "Se préparer pour l'école", icon: "🎒" },
+      { id: 11, title: "Aller à l'école", icon: "🏫" }
+    ];
+
+    let userState = JSON.parse(localStorage.getItem('nina_routine_state')) || {};
+    let lastCelebratedScore = null;
+
+    function renderTasks() {
+      const grid = document.getElementById('tasksGrid');
+      grid.innerHTML = '';
+
+      tasks.forEach(task => {
+        const status = userState[task.id];
+        const isUp = status === 'up';
+        const isDown = status === 'down';
+
+        let bgCard = "bg-white";
+        if (isUp) bgCard = "bg-emerald-50 border-2 border-emerald-400";
+        if (isDown) bgCard = "bg-rose-50 border-2 border-rose-300";
+
+        grid.innerHTML += `
+          <div class="task-card ${bgCard} rounded-2xl p-4 flex flex-col justify-between card-shadow border border-pink-100">
+            <div class="flex items-center justify-between mb-2">
+              <span class="bg-pink-500 text-white font-fredoka font-bold w-8 h-8 rounded-full flex items-center justify-center text-sm shadow">
+                ${task.id}
+              </span>
+              <span class="text-2xl">${task.icon}</span>
+            </div>
+
+            <h3 class="font-fredoka text-lg text-gray-800 font-semibold mb-4">
+              ${task.title}
+            </h3>
+
+            <div class="flex gap-2 mt-auto pt-2 border-t border-gray-100">
+              <button 
+                onclick="setTaskStatus(${task.id}, 'up')" 
+                class="flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-1 transition ${
+                  isUp 
+                    ? 'bg-emerald-500 text-white shadow-md scale-105' 
+                    : 'bg-gray-100 hover:bg-emerald-100 text-emerald-700'
+                }"
+              >
+                👍 Oui
+              </button>
+
+              <button 
+                onclick="setTaskStatus(${task.id}, 'down')" 
+                class="flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-1 transition ${
+                  isDown 
+                    ? 'bg-rose-500 text-white shadow-md scale-105' 
+                    : 'bg-gray-100 hover:bg-rose-100 text-rose-700'
+                }"
+              >
+                👎 Non
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      updateScore();
+    }
+
+    function setTaskStatus(taskId, status) {
+      if (userState[taskId] === status) {
+        delete userState[taskId];
+      } else {
+        userState[taskId] = status;
+      }
+      localStorage.setItem('nina_routine_state', JSON.stringify(userState));
+      renderTasks();
+    }
+
+    function updateScore() {
+      const score = Object.values(userState).filter(s => s === 'up').length;
+      document.getElementById('scoreDisplay').textContent = `${score} / 11 🌟`;
+
+      const msgEl = document.getElementById('celebrationMsg');
+
+      if (score >= 6) {
+        if (lastCelebratedScore !== score) {
+          lastCelebratedScore = score;
+          triggerCelebration(score);
+        }
+      } else {
+        lastCelebratedScore = null;
+        if (score > 0) {
+          msgEl.innerHTML = `Continue tes efforts Nina ! 💪 (${6 - score} de plus pour débloquer la fête !)`;
+        } else {
+          msgEl.innerHTML = `Choisis 👍 ou 👎 pour chaque tâche avant d'aller dormir !`;
+        }
+      }
+    }
+
+    function triggerCelebration(score) {
+      const msgEl = document.getElementById('celebrationMsg');
+
+      switch (score) {
+        case 6:
+          msgEl.innerHTML = `🎆 <strong>SCORE 6 : Feux d'artifice !</strong><br>Bravo Nina ! Tu as réussi ta journée !`;
+          triggerFireworks();
+          break;
+        case 7:
+          msgEl.innerHTML = `🗣️ <strong>SCORE 7 : Bravo Nina, C'est super !</strong>`;
+          speakText("Bravo Nina, C'est super !");
+          triggerConfetti();
+          break;
+        case 8:
+          msgEl.innerHTML = `🎈 <strong>SCORE 8 : Envolée de ballons !</strong><br>Regarde tous ces ballons qui s'envolent !`;
+          triggerBalloons();
+          break;
+        case 9:
+          msgEl.innerHTML = `🎵 <strong>SCORE 9 : Musique de fête !</strong><br>C'est la fête pour toi Nina !`;
+          playPartyMusic();
+          triggerConfetti();
+          break;
+        case 10:
+          msgEl.innerHTML = `🌟 <strong>SCORE 10 : Incroyable !</strong>`;
+          speakText("Fantastique Nina, tu as presque la journée parfaite !");
+          triggerFireworks();
+          break;
+        case 11:
+          msgEl.innerHTML = `🏆 <strong>SCORE 11 : PARFAIT ! 🚨</strong><br>Journée Parfaite ! Tu es la championne !`;
+          playSirenSound();
+          triggerMegaConfetti();
+          triggerFireworks();
+          break;
+      }
+    }
+
+    // --- SCORE 6 / 10 / 11 : FEUX D'ARTIFICE ---
+    function triggerFireworks() {
+      var duration = 3 * 1000;
+      var animationEnd = Date.now() + duration;
+      var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+      var interval = setInterval(function() {
+        var timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) return clearInterval(interval);
+
+        var particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random() * 0.4 + 0.1, y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random() * 0.4 + 0.5, y: Math.random() - 0.2 } }));
+      }, 250);
+    }
+
+    // --- SCORE 7 / 10 : VOIX PARLÉE ---
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'fr-FR';
+        utterance.pitch = 1.3;
+        utterance.rate = 0.95;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // --- SCORE 8 : BALLONS ---
+    function triggerBalloons() {
+      const colors = ['#ff4785', '#7c3aed', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'];
+      for (let i = 0; i < 25; i++) {
+        setTimeout(() => {
+          const balloon = document.createElement('div');
+          balloon.className = 'balloon';
+          balloon.style.left = (Math.random() * 90 + 5) + 'vw';
+          balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          balloon.style.animationDuration = (Math.random() * 2 + 3.5) + 's';
+          document.body.appendChild(balloon);
+
+          setTimeout(() => balloon.remove(), 5000);
+        }, i * 150);
+      }
+    }
+
+    // --- SCORE 9 : MUSIQUE DE FÊTE (Web Audio API) ---
+    function playPartyMusic() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        const notes = [
+          { f: 523.25, d: 0.15 },
+          { f: 659.25, d: 0.15 },
+          { f: 783.99, d: 0.15 },
+          { f: 1046.50, d: 0.3 },
+          { f: 783.99, d: 0.15 },
+          { f: 1046.50, d: 0.5 }
         ];
 
-        // État de l'utilisateur
-        let userState = JSON.parse(localStorage.getItem('nina_routine_state')) || {};
-        let lastCelebratedScore = null;
+        let now = ctx.currentTime;
+        notes.forEach(note => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(note.f, now);
+          
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + note.d);
 
-        // Génération des cartes HTML
-        function renderTasks() {
-            const grid = document.getElementById('tasksGrid');
-            grid.innerHTML = '';
+          osc.connect(gain);
+          gain.connect(ctx.destination);
 
-            tasks.forEach(task => {
-                const status = userState[task.id];
-                const isUp = status === 'up';
-                const isDown = status === 'down';
+          osc.start(now);
+          osc.stop(now + note.d);
+          now += note.d + 0.05;
+        });
+      } catch (e) {
+        console.log("Audio non supporté");
+      }
+    }
 
-                let bgCard = "bg-white";
-                if (isUp) bgCard = "bg-emerald-50/90 border-2 border-emerald-300";
-                if (isDown) bgCard = "bg-rose-50/90 border-2 border-rose-200";
+    // --- SCORE 11 : SIRÈNE DE FÊTE ---
+    function playSirenSound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
 
-                const cardHtml = `
-                    <div class="task-card ${bgCard} rounded-2xl p-4 flex flex-col justify-between card-shadow border border-pink-100 relative overflow-hidden">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="badge-number text-white font-bold w-8 h-8 rounded-full flex items-center justify-center text-sm shadow">
-                                ${task.id}
-                            </span>
-                            <span class="text-2xl">${task.icon}</span>
-                        </div>
+        osc.type = 'sawtooth';
+        const now = ctx.currentTime;
 
-                        <h3 class="font-fredoka text-lg text-gray-800 font-semibold mb-4 leading-snug">
-                            ${task.title}
-                        </h3>
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.linearRampToValueAtTime(900, now + 0.4);
+        osc.frequency.linearRampToValueAtTime(400, now + 0.8);
+        osc.frequency.linearRampToValueAtTime(1000, now + 1.2);
 
-                        <div class="flex gap-2 mt-auto pt-2 border-t border-gray-100">
-                            <button 
-                                onclick="setTaskStatus(${task.id}, 'up')" 
-                                class="btn-thumb flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all ${
-                                    isUp 
-                                        ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200 scale-105' 
-                                        : 'bg-gray-100 hover:bg-emerald-100 text-emerald-700'
-                                }"
-                            >
-                                <span class="text-xl">👍</span> Oui !
-                            </button>
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
 
-                            <button 
-                                onclick="setTaskStatus(${task.id}, 'down')" 
-                                class="btn-thumb flex-1 py-2 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all ${
-                                    isDown 
-                                        ? 'bg-rose-400 text-white shadow-lg shadow-rose-200 scale-105' 
-                                        : 'bg-gray-100 hover:bg-rose-100 text-rose-600'
-                                }"
-                            >
-                                <span class="text-xl">👎</span> Non
-                            </button>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += cardHtml;
-            });
+        osc.connect(gain);
+        gain.connect(ctx.destination);
 
-            updateScore();
-        }
+        osc.start(now);
+        osc.stop(now + 1.5);
+      } catch (e) {
+        console.log("Audio non supporté");
+      }
+    }
 
-        function setTaskStatus(taskId, status) {
-            if (userState[taskId] === status) {
-                delete userState[taskId];
-            } else {
-                userState[taskId] = status;
-            }
-            localStorage.setItem('nina_routine_state', JSON.stringify(userState));
-            renderTasks();
-        }
+    function triggerConfetti() {
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.7 } });
+    }
 
-        // Mise à jour du score et déclenchement des fêtes
-        function updateScore() {
-            const score = Object.values(userState).filter(status => status === 'up').length;
-            document.getElementById('scoreText').textContent = `${score} / 11 🌟`;
+    function triggerMegaConfetti() {
+      confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+    }
 
-            const statusMessage = document.getElementById('statusMessage');
-            const rewardBadge = document.getElementById('rewardBadge');
-            const relaunchBtn = document.getElementById('relaunchBtn');
+    function resetDay() {
+      userState = {};
+      localStorage.removeItem('nina_routine_state');
+      lastCelebratedScore = null;
+      document.getElementById('celebrationMsg').innerHTML = "Choisis 👍 ou 👎 pour chaque tâche avant d'aller dormir !";
+      renderTasks();
+    }
 
-            if (score >= 6) {
-                rewardBadge.classList.remove('hidden');
-                relaunchBtn.classList.remove('hidden');
-                relaunchBtn.classList.add('flex');
-
-                // Si le score a changé, on déclenche automatiquement la fête
-                if (lastCelebratedScore !== score) {
-                    lastCelebratedScore = score;
-                    playCelebrationForScore(score);
-                }
-            } else {
-                rewardBadge.classList.add('hidden');
-                relaunchBtn.classList.add('hidden');
-                relaunchBtn.classList.remove('flex');
-                lastCelebratedScore = null;
-
-                if (score > 0) {
-                    statusMessage.innerHTML = `Encore un effort Nina ! 💪 (${6 - score} de plus pour débloquer la fête !)`;
-                } else {
-                    statusMessage.innerHTML = `Mets tes 👍 et 👎 ci-dessus avant de te coucher !`;
-                }
-            }
-        }
-
-        function playCurrentCelebration() {
-            const score = Object.values(userState).filter(status => status === 'up').length;
-            if (score >= 6) {
-                playCelebrationForScore(score);
-            }
-        }
-
-        // Gérer les différentes célébrations par score (6 à 11)
-        function playCelebrationForScore(score) {
-            const statusMessage = document.getElementById('statusMessage');
-
-            switch (score) {
-                case 6:
-                    statusMessage.innerHTML = `🎆 <strong>SCORE 6 : Feux d'artifice !</strong><br>Bravo Nina ! Tu as réussi ta journée !`;
-                    triggerFireworks();
-                    break;
-                case 7:
-                    statusMessage.innerHTML = `🗣️ <strong>SCORE 7 : Bravo Nina, c'est super !</strong>`;
-                    speakText("Bravo Nina, c'est super !");
-                    triggerLightConfetti();
-                    break;
-                case 8:
-                    statusMessage.innerHTML = `🎈 <strong>SCORE 8 : Envolée de ballons !</strong><br>Regarde tous ces ballons pour toi !`;
-                    triggerBalloons();
-                    break;
-                case 9:
-                    statusMessage.innerHTML = `🎵 <strong>SCORE 9 : Musique de fête !</strong><br>Danse Nina, c'est ta musique !`;
-                    playPartyMusic();
-                    triggerLightConfetti();
-                    break;
-                case 10:
-                    statusMessage.innerHTML = `🌟 <strong>SCORE 10 : Incroyable !</strong>`;
-                    speakText("Fantastique Nina, tu as presque la journée parfaite !");
-                    triggerFireworks();
-                    break;
-                case 11:
-                    statusMessage.innerHTML = `🏆 <strong>SCORE 11 : PARFAIT ! 🚨</strong><br>Journée Parfaite ! Tu es la championne !`;
-                    playSirenSound();
-                    triggerMegaConfetti();
-                    break;
-            }
-        }
-
-        // --- EFFET 6 : Feux d'artifice ---
-        function triggerFireworks() {
-            var duration = 3 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
-
-            var interval = setInterval(function() {
-                var timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) return clearInterval(interval);
-
-                var particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-            }, 250);
-        }
-
-        function randomInRange(min, max) {
-            return Math.random() * (max - min) + min;
-        }
-
-        // --- EFFETS 7 & 10 : Synthèse vocale ---
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Arreter les paroles en cours
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'fr-FR';
-                utterance.pitch = 1.3; // Voix un peu plus aigüe / enfantine
-                utterance.rate = 0.95;
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-
-        // --- EFFET 8 : Ballons gonflables ---
-        function triggerBalloons() {
-            const colors = ['#ff4785', '#7c3aed', '#06b6d4', '#10b981', '#f59e0b', '#ec4899'];
-            for (let i = 0; i < 25; i++) {
-                setTimeout(() => {
-                    const balloon = document.createElement('div');
-                    balloon.className = 'balloon';
-                    balloon.style.left = Math.random() * 90 + 'vw';
-                    balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    balloon.style.animationDuration = (Math.random() * 2 + 4) + 's';
-                    document.body.appendChild(balloon);
-
-                    setTimeout(() => balloon.remove(), 6000);
-                }, i * 150);
-            }
-        }
-
-        // --- EFFET 9 : Musique de fête (Web Audio API) ---
-        function playPartyMusic() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const ctx = new AudioContext();
-                
-                // Notes joyeuses (Jingle)
-                const notes = [
-                    { f: 523.25, d: 0.15 }, // Do
-                    { f: 659.25, d: 0.15 }, // Mi
-                    { f: 783.99, d: 0.15 }, // Sol
-                    { f: 1046.50, d: 0.3 }, // Do haut
-                    { f: 783.99, d: 0.15 }, // Sol
-                    { f: 1046.50, d: 0.5 }  // Do haut long
-                ];
-
-                let now = ctx.currentTime;
-                notes.forEach(note => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(note.f, now);
-                    
-                    gain.gain.setValueAtTime(0.3, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + note.d);
-
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-
-                    osc.start(now);
-                    osc.stop(now + note.d);
-                    now += note.d + 0.05;
-                });
-            } catch (e) {
-                console.log("Web Audio API pas supporté ou bloqué");
-            }
-        }
-
-        // --- EFFET 11 : Sirène de fête (Web Audio API) ---
-        function playSirenSound() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const ctx = new AudioContext();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-
-                osc.type = 'sawtooth';
-                
-                // Effet de sirène montante/descendante
-                const now = ctx.currentTime;
-                osc.frequency.setValueAtTime(400, now);
-                osc.frequency.linearRampToValueAtTime(900, now + 0.4);
-                osc.frequency.linearRampToValueAtTime(400, now + 0.8);
-                osc.frequency.linearRampToValueAtTime(1000, now + 1.2);
-
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
-
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                osc.start(now);
-                osc.stop(now + 1.5);
-            } catch (e) {
-                console.log("Audio non supporté");
-            }
-        }
-
-        // Effet de confettis léger
-        function triggerLightConfetti() {
-            confetti({ particleCount: 80, spread: 70, origin: { y: 0.8 } });
-        }
-
-        // Effet Mega Confetti pour le 11/11
-        function triggerMegaConfetti() {
-            var count = 350;
-            var defaults = { origin: { y: 0.7 } };
-
-            function fire(particleRatio, opts) {
-                confetti(Object.assign({}, defaults, opts, {
-                    particleCount: Math.floor(count * particleRatio)
-                }));
-            }
-
-            fire(0.25, { spread: 26, startVelocity: 55 });
-            fire(0.2, { spread: 60 });
-            fire(0.35, { spread: 100, decay: 0.91, scalar: 1.2 });
-            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.4 });
-            fire(0.1, { spread: 120, startVelocity: 45 });
-        }
-
-        function resetDay() {
-            if (confirm("Veux-tu réinitialiser les choix pour commencer une nouvelle journée ? ☀️")) {
-                userState = {};
-                localStorage.removeItem('nina_routine_state');
-                lastCelebratedScore = null;
-                renderTasks();
-            }
-        }
-
-        window.onload = function() {
-            renderTasks();
-        };
-    </script>
+    window.onload = function() {
+      renderTasks();
+    };
+  </script>
 </body>
 </html>
